@@ -1,0 +1,182 @@
+{% load static %}
+{% now 'Y-m-d' as today %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>MyDays | {% block title %}{% endblock %}</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'images/favicon.ico' %}">
+    <link rel="stylesheet" href="{% static 'styles/index.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/components.css' %}">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined"
+          rel="stylesheet">
+    <script src="https://kit.fontawesome.com/2e3606f209.js"></script>
+    {% block links %}{% endblock %}
+</head>
+<body>
+<header id="header">
+    <div id="header-buttons">
+        <div id="write-day-button" class="header-button" title="Перейти до заповнення інформації про поточний день">
+            <a href="{% url 'edit_day' user.username today %}" class="prevent-a"><i
+                    class="fa-solid fa-pencil icon-style"></i></a>
+        </div>
+        <div class="vl"></div>
+        <div id="notifications-button" class="header-button" title="Сповіщення">
+            <button class="button"><i class="fa-regular fa-bell icon-style">
+            </i></button>
+            {#            <span class="badge">11</span>#}
+        </div>
+        <div id="messages-button" class="header-button" title="Вхідні повідомлення">
+            <button class="button"><i class="fa-regular fa-message icon-style">
+            </i></button>
+            {#            <span class="badge">1</span>#}
+        </div>
+        <div id="requests-button"
+             class="header-button {% if request.resolver_match.url_name == 'friend_requests' %}current-page{% endif %}"
+             title="Запити на дружбу">
+            <a href="{% url 'friend_requests' %}">
+                <button class="button"><i class="fa-solid fa-user-group icon-style">
+                </i></button>
+            </a>
+            {% if pending_friend_requests_count > 0 %}
+                <span class="badge">{{ pending_friend_requests_count }}</span>
+            {% endif %}
+        </div>
+
+    </div>
+    <div id="header-user">
+        <a href="{% url 'home' %}" class="prevent-a" title="Профіль користувача">
+            <div id="header-user-info">
+                <img id="header-user-icon" alt="👤" src="
+            {% if user.profile.main_photo %}
+                {{ user.profile.main_photo.url }}
+            {% else %}
+                {% static '/images/no-profile-photo.png' %}
+            {% endif %}">
+                <div id="header-user-name">{{ user.first_name }} {{ user.last_name }}</div>
+            </div>
+        </a>
+    </div>
+</header>
+<nav id="sidebar">
+    <div id="logo">
+        <a href="{% url 'home' %}" class="prevent-a" title="Домашня сторінка">
+            <img alt="MyDays" src="{% static 'images/mydays-logo-1.webp' %}">
+        </a>
+    </div>
+    <ul class="menu">
+        <li class="menu-line">
+            <hr>
+        </li>
+        {% url 'home' as home_url %}
+        {% url 'profile' user.username as user_profile_url %}
+        <li class="menu-item {% if request.path == home_url or request.path == user_profile_url %}current-page{% endif %}">
+            <a href="{{ home_url }}" class="prevent-a">
+                <i class="material-icons-outlined md-30 md-dark">account_circle</i>
+                <span class="menu-item-name">Мій профіль</span>
+            </a>
+        </li>
+        <li class="menu-item {% if request.resolver_match.url_name == 'friends' %}current-page{% endif %}">
+            <a href="{% url 'friends' user.username %}" class="prevent-a">
+                <i class="material-icons-outlined md-30 md-dark">groups</i>
+                <span class="menu-item-name">Близькі люди</span>
+            </a>
+        </li>
+        <li class="menu-item {% if request.resolver_match.url_name == 'friends_days' %}current-page{% endif %}">
+            <a href="{% url 'friends_days' %}" class="prevent-a">
+                <i class="material-icons-outlined md-30 md-dark">calendar_view_day</i>
+                <span class="menu-item-name">Дні близьких</span>
+            </a>
+        </li>
+        <li class="menu-line">
+            <hr>
+        </li>
+        {% url 'view_day' user.username today as today_url %}
+        {% url 'edit_day' user.username today as edit_today_url %}
+        <li class="menu-item {% if request.path == today_url or request.path == edit_today_url %}current-page{% endif %}">
+            <a href="{{ today_url }}" class="prevent-a">
+                <i class="material-icons-outlined md-30 md-dark">pageview</i>
+                <span class="menu-item-name">Сьогоднішній день</span>
+            </a>
+        </li>
+        <li class="menu-item {% if request.resolver_match.url_name == 'calendar' %}current-page{% endif %}">
+            <a href="{% url 'calendar' %}" class="prevent-a">
+                <i class="material-icons-outlined md-30 md-dark">calendar_month</i>
+                <span class="menu-item-name">Календар</span>
+            </a>
+        </li>
+        <li class="menu-item {% if request.resolver_match.url_name == 'view_statistics' %}current-page{% endif %}">
+            <a href="{% url 'view_statistics' %}" class="prevent-a">
+                <i class="material-icons-outlined md-30 md-dark">insert_chart</i>
+                <span class="menu-item-name">Статистика і звіти</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="#" class="prevent-a">
+                <i class="material-icons-outlined md-30 md-dark">grading</i>
+                <span class="menu-item-name">Рекомендації</span>
+            </a>
+        </li>
+        <li class="menu-item {% if request.resolver_match.url_name == 'view_conclusions' %}current-page{% endif %}">
+            <a href="{% url 'view_conclusions' %}" class="prevent-a">
+                <i class="material-icons-outlined md-30 md-dark">short_text</i>
+                <span class="menu-item-name">Висновки</span>
+            </a>
+        </li>
+        <li class="menu-item {% if request.resolver_match.url_name == 'view_life_lessons' %}current-page{% endif %}">
+            <a href="{% url 'view_life_lessons' %}" class="prevent-a">
+                <i class="material-icons-outlined md-30 md-dark">bookmarks</i>
+                <span class="menu-item-name">Життєві уроки</span>
+            </a>
+        </li>
+        <li class="menu-item {% if request.resolver_match.url_name == 'view_achievements' %}current-page{% endif %}">
+            <a href="{% url 'view_achievements' %}" class="prevent-a">
+                <i class="material-icons-outlined md-30 md-dark">emoji_events</i>
+                <span class="menu-item-name">Досягнення</span>
+            </a>
+        </li>
+        <li class="menu-line">
+            <hr>
+        </li>
+        <li class="menu-item">
+            <a href="#" class="prevent-a">
+                <i class="material-icons-outlined md-30 md-dark">settings</i>
+                <span class="menu-item-name">Налаштування</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="#" class="prevent-a">
+                <i class="material-icons-outlined md-30 md-dark">help</i>
+                <span class="menu-item-name">Довідка</span>
+            </a>
+        </li>
+        <li class="menu-item">
+            <a href="#" class="prevent-a">
+                <i class="material-icons-outlined md-30 md-dark">support_agent</i>
+                <span class="menu-item-name">Зв'язок з адміном</span>
+            </a>
+        </li>
+        <li class="menu-line">
+            <hr>
+        </li>
+        <li class="menu-item">
+            <a href="{% url 'logout' %}" class="prevent-a">
+                <i class="material-icons-outlined md-30 md-dark">exit_to_app</i>
+                <span class="menu-item-name">Вийти</span>
+            </a>
+        </li>
+
+    </ul>
+</nav>
+<main id="content">
+    {% block content %}{% endblock %}
+</main>
+<footer id="footer">
+    <span>Developed by Maksym Kravchuk.</span><br>
+    <span>©️ 2024 MyDays. All rights reserved.</span>
+</footer>
+<script src="{% static '/js/components.js' %}"></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

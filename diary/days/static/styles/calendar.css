@@ -1,0 +1,234 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@100;300;400;500;800&display=swap");
+
+body {
+    background: white;
+}
+
+#calendar {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    justify-content: center;
+    font-family: "Poppins", "Arial", sans-serif;
+    width: 100%;
+    height: fit-content;
+}
+
+#calendar-header {
+    width: 1230px;
+    margin: 8px 10px;
+    height: 54px;
+    background: cornflowerblue;
+    box-shadow: 0 2px 6px 0 rgba(31, 38, 135, 0.37);
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.calendar-sheet {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    height: fit-content;
+    width: 100%;
+
+}
+
+.arrow-box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.arrows {
+    width: 18px;
+    height: 18px;
+    border-bottom: 2px solid;
+    border-left: 2px solid;
+    border-bottom-left-radius: 2px;
+}
+
+.arrows:hover {
+    transition: 0.3s;
+    cursor: pointer;
+}
+
+.arrows-prev {
+    margin-left: 17px;
+    transform: rotate(45deg);
+}
+
+.arrows-prev:hover {
+    transform: scale(1.5) rotate(45deg);
+}
+
+.arrows-next {
+    margin-right: 17px;
+    transform: rotate(-135deg);
+}
+
+.arrows-next:hover {
+    transform: scale(1.5) rotate(-135deg);
+}
+
+.calendar-matrix {
+    padding: 0;
+    margin: auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr 1fr 1fr;
+    justify-content: center;
+    align-items: center;
+    list-style: none;
+}
+
+.calendar-matrix-day:hover {
+    transform: scale(1.15);
+    transition: 0.2s;
+    z-index: 11;
+}
+
+
+.calendar-matrix-day {
+    position: relative;
+    width: 144px;
+    height: 144px;
+    margin: 3px;
+    box-sizing: border-box;
+    background: rgba(255, 255, 255, 0.25);
+    box-shadow: 0 5px 12px 0 rgba(31, 38, 135, 0.37);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    border-radius: 9px;
+    /*border: 1px solid rgba(255, 255, 255, 0.18);*/
+}
+
+.day-cell-content {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: start;
+    flex-wrap: wrap;
+    padding: 7px 14px;
+    font-weight: 300;
+    font-size: 0.72rem;
+    box-sizing: border-box;
+    position: absolute;
+    z-index: 2;
+}
+
+.day-image-background {
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    opacity: 0.5;
+    padding: 0;
+    margin: 0;
+    background-color: black;
+    border-radius: 9px;
+    position: absolute;
+    background-size: cover;
+}
+
+.calendar-matrix-day .day-access-mode {
+    padding-top: 0.45rem;
+}
+
+.calendar-matrix-day .day-access-mode .material-icons-outlined {
+    font-size: 1.45rem;
+}
+
+.calendar-matrix-day .day-type {
+    width: 100%;
+    font-size: 1rem;
+    font-weight: 500;
+    display: flex;
+    justify-content: start;
+    gap: 5px;
+}
+
+.calendar-matrix-day .day-title {
+    height: 45%;
+    width: 100%;
+    font-weight: 500;
+    text-align: center;
+    font-size: 0.75rem;
+    margin: 0.2rem 0;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.calendar-matrix-day time {
+    font-size: 1.5rem;
+    font-weight: 500;
+}
+
+.today time {
+    font-weight: 800;
+}
+
+.today {
+    /*box-shadow: none;*/
+    color: white;
+    background-image: linear-gradient(225deg, #FF3CAC 0%, #784BA0 50%, #2B86C5 100%);
+}
+
+#calendar-date {
+    margin-right: 200px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 24px;
+    font-family: "Arial", sans-serif;
+    font-weight: 300;
+}
+
+
+.calendar-year {
+    margin-left: 30px;
+    user-select: none;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.year {
+    padding: 0;
+}
+
+.calendar-month .select-button {
+    font-size: 24px;
+    font-family: "Arial", sans-serif;
+    font-weight: 300;
+}
+
+.calendar-year .next-year {
+    cursor: pointer;
+    margin-left: 5px;
+    width: 8px;
+    height: 8px;
+    border-color: #000;
+    border-bottom: 2px solid;
+    border-left: 2px solid;
+    transform: rotate(-135deg);
+}
+
+.calendar-year .prev-year {
+    cursor: pointer;
+    margin-right: 5px;
+    width: 8px;
+    height: 8px;
+    border-color: #000;
+    border-bottom: 2px solid;
+    border-left: 2px solid;
+    transform: rotate(45deg);
+}
+
+.calendar-search {
+    margin-left: 150px;
+}
+

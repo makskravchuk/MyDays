@@ -1,0 +1,13 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block title %}У доступі відмовлено{% endblock %}
+{% block links %}<link rel="stylesheet" href="{% static 'styles/restricted_page.css' %}"> {% endblock %}
+
+{% block content %}
+    <div id="restricted_page_wallpaper">
+       <img src="{% static 'images/restricted-content.jpg' %}">
+    </div>
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}

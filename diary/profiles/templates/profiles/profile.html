@@ -1,0 +1,297 @@
+{% extends 'index.html' %}
+{% load static %}
+{% load profile_filters %}
+{% block title %}{{ specific_user.username }}{% endblock %}
+
+{% block links %}
+    <link rel="stylesheet" href="{% static '/styles/profile.css' %}">
+    <link rel="stylesheet" href="{% static '/styles/days_search.css' %}">
+    <link rel="stylesheet" href="{% static '/styles/edit_profile.css' %}">
+    <link rel="stylesheet" href="{% static '/styles/profile_gallery.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div id="profile">
+        <div id="profile-card">
+            {% if specific_user.profile.life_status %}
+                <blockquote class="profile-status">
+                    <i class="material-icons-outlined left-quote">format_quote</i>
+                    <span class="status-text">{{ specific_user.profile.life_status }}</span>
+                    <i class="material-icons-outlined right-quote">format_quote</i>
+                </blockquote>
+            {% endif %}
+            <img id='main-photo' alt="👤" src="
+                {% if specific_user.profile.main_photo %}
+                    {{ specific_user.profile.main_photo.url }}
+                {% else %}
+                    {% static '/images/no-profile-photo.png' %}
+                {% endif %}">
+            {% if user.id == specific_user.id %}
+                <div id="profile-card-caption">
+                    <button class="edit-button" type="button">Редагувати профіль</button>
+                </div>
+            {% endif %}
+            <div id="friends" class="content-block-style">
+                <div id="friends-header">
+                    <span class="friends-count"><span>Близькі люди</span> <span
+                            class="badge-info">{{ friends|length }}</span></span>
+                    <span class="friends-list-link text-link"><a class="prevent-a"
+                                                                 href="{% url 'friends' specific_user.username %}">Переглянути</a></span>
+                </div>
+                <div id="friends-container">
+                    {% for friend in friends %}
+                        <div class="friend-card">
+                            <a class="prevent-a link" href="{% url 'profile' friend.username %}">
+                                <img class="user-photo" src="{% if friend.profile.main_photo %}
+                            {{ friend.profile.main_photo.url }}
+                            {% else %}
+                            {% static 'images/no-profile-photo.png' %}
+                            {% endif %}" alt="👤">
+                                <div class="friend-name user-name">
+                                    <div>{{ friend.first_name }}</div>
+                                    <div>{{ friend.last_name }}</div>
+                                </div>
+                            </a>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div id="profile-info">
+            <div id="profile-text-info">
+                <h3 class="profile-full-name">{{ specific_user.first_name }} {{ specific_user.last_name }}</h3>
+                <div id="profile-text-info-lists" class="content-block-style">
+                    <ul class="main-info">
+                        <li><span>Username: </span>{{ specific_user.username }}</li>
+                        {% if specific_user.profile.gender %}
+                            <li><span>Стать: </span>{{ specific_user.profile.get_gender_display }}</li>{% endif %}
+                        <li><span>Дата народження: </span>
+                            {{ specific_user.profile.date_of_birth| formate_date }}
+                        </li>
+                        {% if specific_user.profile.country %}
+                            <li><span>Країна: </span>{{ specific_user.profile.country }}</li>{% endif %}
+                        {% if specific_user.profile.city %}
+                            <li><span>Місто: </span>{{ specific_user.profile.city }}</li>{% endif %}
+                    </ul>
+                    <ul class="main-info">
+                        <li><span>Email: </span>{{ specific_user.email }}</li>
+                        <li><span>Номер телефону: </span>{{ specific_user.profile.phone_number }}</li>
+                    </ul>
+                </div>
+            </div>
+            <div id="profile-photos">
+                <div id="profile-photos-header">
+                    <div id="profile-photos-count"><span
+                            class="badge-info">{{ specific_user.profile.profile_photos.count }}</span> <span>Фото</span>
+                    </div>
+                    <div class="profile-photos-button text-link">Переглянути галерею</div>
+                </div>
+                <div id="profile-photos-content" class="photos-slider">
+                    <i id="left" class="fa-solid fa-angle-left"></i>
+                    <ul class="carousel">
+                        {% for profile_photo in specific_user.profile.profile_photos.all %}
+                            <li class="card" data-img-index="{{ profile_photo.id }}">
+                                <div class="img"><img src="{{ profile_photo.image.url }}" alt="img" draggable="false">
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                    <i id="right" class="fa-solid fa-angle-right"></i>
+                </div>
+            </div>
+            {% if specific_user.profile.about_me %}
+                <div id="about-me" class="content-block-style">
+                    <h3 class="profile-text-info-title">Про мене</h3>
+                    <p id="about-me-text">{{ specific_user.profile.about_me }}</p>
+                </div>
+            {% endif %}
+        </div>
+        {% if public_days %}
+        <div id="shared-days">
+            <div id="shared-days-search">
+                <form>
+                    <div class="search day-search" title="Пошук днів з відкритим доступом">
+                            <span class="day-search-property custom-select">
+                            <button class="select-button property-select-button" type="button">
+                                    <span class="selected-value property-selected-value"></span>
+                                    <span class="select-arrow"></span>
+                            </button>
+                                <ul class="select-dropdown property-select-dropdown" role="listbox"></ul>
+                            </span>
+                        <button class="search-button form-button"><i
+                                class="search-icon material-icons-outlined ">search</i></button>
+                        <input class="search-input" type="text" name="public_days_search_query"
+                               placeholder="Пошук публічних днів">
+                        <button class="clear-search-input form-button" type="reset">
+                            <i class="clear-icon material-icons-outlined">close</i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+            {% for public_day in public_days %}
+                <div class="post">
+                    <a class="user-badge prevent-a" href="{% url 'profile' specific_user.username %}">
+                        <img class="user-badge-photo" alt="👤" src="
+                            {% if specific_user.profile.main_photo %}
+                            {{ specific_user.profile.main_photo.url }}
+                            {% else %}
+                            {% static 'images/no-profile-photo.png' %}
+                            {% endif %}">
+                        <div class="user-badge-names">
+                            <span class="user-badge-name">{{ specific_user.first_name }} {{ specific_user.last_name }}</span>
+                            <span class="user-badge-username">@{{ specific_user.username }}</span>
+                        </div>
+                    </a>
+                    <div class="shared-day content-block-style">
+                        <div class="shared-day-header">
+                            <div class="shared-day-date">{{ public_day.date|formate_date }}</div>
+                            <div class="shared-day-title">
+                                {% if public_day.title %}{{ public_day.title }}{% endif %}
+                            </div>
+                        </div>
+                        <div class="shared-day-body">
+                            {% if public_day.image_title %}
+                                <img alt="Описове зображення" class="post-image-title"
+                                     src="{{ public_day.image_title.url }}">
+                            {% endif %}
+                            {% if public_day.text_description %}
+                            <div class="shared-day-text-fragment">
+                                    {{ public_day.text_description|truncatechars_html:350|safe }}
+                            </div>
+                            {% endif %}
+                        </div>
+                        <div class="shared-day-footer">
+                            <a class="shared-day-link prevent-a" href="{% url 'view_day' specific_user.username public_day.date %}">Переглянути цей день</a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+    {% if user.id == specific_user.id %}
+        <div id="edit-profile">
+            <form action="" class="form" method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="edit-profile-content">
+                    <span class="close-modal-button close-edit-profile"><i
+                            class="material-icons-outlined"> close</i></span>
+                    <div class="edit-profile-photo-block">
+                        <div class="profile-photo-container">
+                            <img class='edit-main-photo' alt="👤" src="{% if specific_user.profile.main_photo %}
+                                {{ specific_user.profile.main_photo.url }}
+                            {% else %}
+                                {% static '/images/no-profile-photo.png' %}
+                            {% endif %}">
+                            {{ profile_edit_form.main_photo }}
+                            <div class="change-photo-button btn"><i class="material-icons-outlined">photo_camera</i>Змінити
+                                основне фото
+                            </div>
+                            {% if messages %}
+                                <div class="edit-errors">
+                                    {% for message in messages %}
+                                        <div{% if message.tags %}
+                                            class="{{ message.tags }}"{% endif %}>{{ message }}</div>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="edit-profile-info-block">
+                        <h3 class="edit-profile-block-title">Налаштування профілю</h3>
+                        <div class="input-box">
+                            <label>Унікальне ім'я користувача</label>
+                            {{ user_edit_form.username }}
+                        </div>
+                        <div class="column">
+                            <div class="input-box">
+                                <label>Ім'я</label>
+                                {{ user_edit_form.first_name }}
+                            </div>
+                            <div class="input-box">
+                                <label>Прізвище</label>
+                                {{ user_edit_form.last_name }}
+                            </div>
+                        </div>
+                        <div class="column">
+                            <div class="input-box">
+                                <label>Електронна пошта</label>
+                                {{ user_edit_form.email }}
+                            </div>
+                            <div class="input-box">
+                                <label>Номер телефону</label>
+                                {{ profile_edit_form.phone_number }}
+                            </div>
+                        </div>
+                        <div class="gender-box">
+                            <h3>Стать</h3>
+                            <div class="gender-option">
+                                {% for gender_radio in profile_edit_form.gender %}
+                                    <div class="gender">
+                                        {{ gender_radio.tag }}
+                                        <label for="{{ gender_radio.id_for_label }}"
+                                               class="radio-label">{{ gender_radio.choice_label }}</label>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div class="column">
+                            <div class="input-box">
+                                <label>Країна</label>
+                                <div class="select-box">
+                                    {{ profile_edit_form.country }}
+                                </div>
+                            </div>
+                            <div class="input-box">
+                                <label>Місто</label>
+                                {{ profile_edit_form.city }}
+                            </div>
+                        </div>
+                        <div class="input-box">
+                            <label>Статус</label>
+                            {{ profile_edit_form.life_status }}
+                        </div>
+                        <div class="save-button-container">
+                            <button class="save-profile-button btn" type="submit">Зберегти зміни</button>
+                        </div>
+                    </div>
+                    <div class="edit-profile-about-me-block">
+                        <h3 class="edit-profile-block-title">Про мене</h3>
+                        {{ profile_edit_form.about_me }}
+                    </div>
+                </div>
+            </form>
+        </div>
+    {% endif %}
+    <div id="profile-gallery">
+        <div class="content">
+            <span class="close-modal-button close-profile-gallery"><i class="material-icons-outlined"> close</i></span>
+            <div class="control-panel">
+                {% if user.id == specific_user.id %}
+                    <button class="add-photo-button"><i class="material-icons-outlined">add_photo_alternate</i><span>Додати фото</span>
+                    </button>
+                {% endif %}
+            </div>
+            <div class="gallery-photos">
+                {% for profile_photo in specific_user.profile.profile_photos.all %}
+                    <div class="profile-photo-item" data-img-index="{{ profile_photo.id }}"><img
+                            src="{{ profile_photo.image.url }}" alt="image"></div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        const userFullName = "{{ specific_user.first_name }} {{ specific_user.last_name }}";
+        let imageIconURL = "{% static '/images/image-icon.png' %}";
+        let photosNumber = "{{specific_user.profile.profile_photos.count}}";
+        const isProfileOwner = {% if user.id == specific_user.id %}true{% else %}false{% endif %};
+        const anyErrorMessages = {% if messages %}true{% else %}false{% endif %};
+    </script>
+    <script src="{% static '/js/profile.js' %}"></script>
+    <script src="{% static '/js/profile_slider.js' %}"></script>
+    <script src="{% static '/js/days_search.js' %}"></script>
+{% endblock %}
+    

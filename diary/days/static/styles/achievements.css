@@ -1,0 +1,24 @@
+.list-page-title{
+    background: gold;
+}
+.list-page-search .search{
+    border-color: gold;
+}
+
+.achievements-list-elem .material-icons-outlined{
+    color: gold;
+    font-size: 35px;
+}
+.achievements-list-elem .elem-number{
+    border-right-color: gold;
+    color: gold;
+}
+
+
+.achievements-list-elem:hover{
+    background: gold;
+}
+
+.achievements-list-elem{
+    border-color: gold;
+}

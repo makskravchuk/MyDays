@@ -1,0 +1,24 @@
+.list-page-title{
+    background: crimson;
+}
+.list-page-search .search{
+    border-color: crimson;
+}
+
+.conclusions-list-elem .material-icons-outlined{
+    color: crimson;
+    font-size: 35px;
+}
+.conclusions-list-elem .elem-number{
+    border-right-color: crimson;
+    color: crimson;
+}
+
+
+.conclusions-list-elem:hover{
+    background: crimson;
+}
+
+.conclusions-list-elem{
+    border-color:crimson;
+}

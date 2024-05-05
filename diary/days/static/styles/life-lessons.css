@@ -1,0 +1,24 @@
+.list-page-title{
+    background: lime;
+}
+.list-page-search .search{
+    border-color: lime;
+}
+
+.life-lessons-list-elem .material-icons-outlined{
+    color: lime;
+    font-size: 35px;
+}
+.life-lessons-list-elem .elem-number{
+    border-right-color: lime;
+    color: lime;
+}
+
+
+.life-lessons-list-elem:hover{
+    background: lime;
+}
+
+.life-lessons-list-elem{
+    border-color: lime;
+}

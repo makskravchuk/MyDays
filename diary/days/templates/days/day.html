@@ -1,0 +1,707 @@
+{% extends 'index.html' %}
+{% load static %}
+{% load day_filters %}
+{% block title %}{{ day.date }} | {{ day.user.username }}{% endblock %}
+{% block links %}
+    <link rel="stylesheet" href="{% static 'styles/day.css' %}">
+    <script src="https://cdn.maptiler.com/maptiler-sdk-js/v1.2.0/maptiler-sdk.umd.min.js"></script>
+    <link href="https://cdn.maptiler.com/maptiler-sdk-js/v1.2.0/maptiler-sdk.css" rel="stylesheet"/>
+    <script src="https://cdn.maptiler.com/maptiler-geocoding-control/v1.2.0/maptilersdk.umd.js"></script>
+    <link href="https://cdn.maptiler.com/maptiler-geocoding-control/v1.2.0/style.css" rel="stylesheet">
+    {% if edit_mode %}
+        <link rel="stylesheet" href="{% static 'styles/edit_day.css' %}">
+    {% endif %}
+{% endblock %}
+{% block content %}
+    <div id="day">
+        <div id="day-content">
+            {% if day.title or day.image_title or edit_mode %}
+                <div id="day-title" class="day-content-block">
+                    {% if day.title or edit_mode %}
+                        <div id="day-text-title" class="content-block-style">
+                            {% if edit_mode %}
+                                <input id="day-text-title-input" type="text" value="{{ day.title|default:'' }}"
+                                       placeholder="Введіть заголовок дня">
+                            {% else %}
+                                {{ day.title }}
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                    {% if day.image_title or edit_mode %}
+                        <div id="day-photo-title-container">
+                            <img id="day-photo-title" alt="Фотозаголовок дня" src="{% if day.image_title %}{{ day.image_title.url }}
+                            {% else %}{% static 'images/no-day-photo-title.png' %}{% endif %}">
+                            {% if edit_mode %}
+                                <input class="choose-photo-title file-chooser-hidden" type="file" accept="image/*">
+                                <div class="change-photo-title-button btn">
+                                    <i class="material-icons-outlined">image</i>
+                                    <span>Змінити фотозаголовок</span>
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+                </div>
+            {% endif %}
+            {% if day.text_description or edit_mode %}
+                <div id="day-text-description" class="content-block-style day-content-block">
+                    <div class="day-block-title">Опис дня</div>
+                    {% if edit_mode %}
+                            <textarea
+                                    id="day-text-description-textarea"
+                                    placeholder="Розкажіть про ваш день"
+                            >{{ day.text_description|default:'' }}</textarea>
+                    {% else %}
+                        {{ day.text_description }}
+                    {% endif %}
+                </div>
+            {% endif %}
+            {% if day.mood or edit_mode %}
+                <div id="day-mood" class="content-block-style day-content-block">
+                    <div class="day-block-title">Настрій</div>
+                    <div class="mood-container">
+                        {% if day.mood.morning_mood or edit_mode %}
+                                <div id="morning-mood" class="mood-block" title="{{ day.mood.get_morning_mood_display }}">
+                                    <span>Ранок:</span>
+                                    {% if edit_mode %}
+                                        <span class="morning-mood-select mood-select custom-select">
+                                            <button class="select-button morning-mood-select-button" type="button">
+                                            <span class="selected-value morning-mood-selected-value">
+                                                {% if day.mood.noon_mood %}
+                                                {{ day.mood.morning_mood_emoji }} {{ day.mood.get_morning_mood_display }}
+                                                {% endif %}
+                                            </span>
+                                            <span class="select-arrow"></span>
+                                            </button>
+                                            <ul class="select-dropdown morning-mood-select-dropdown" role="listbox"></ul>
+                                        </span>
+                                    {% else %}
+                                        <span class="mood-emoji">{{ day.mood.morning_mood_emoji }}</span>
+                                    {% endif %}
+                                </div>
+                        {% endif %}
+                        {% if day.mood.noon_mood or edit_mode %}
+                            <div id="noon-mood" class="mood-block" title="{{ day.mood.get_noon_mood_display }}">
+                                <span>День:</span>
+                                {% if edit_mode %}
+                                        <span class="noon-mood-select mood-select custom-select">
+                                            <button class="select-button noon-mood-select-button" type="button">
+                                            <span class="selected-value noon-mood-selected-value">
+                                                {% if day.mood.noon_mood %}
+                                            {{ day.mood.noon_mood_emoji }} {{ day.mood.get_noon_mood_display }}
+                                            {% endif %}
+
+                                            </span>
+                                            <span class="select-arrow"></span>
+                                            </button>
+                                            <ul class="select-dropdown noon-mood-select-dropdown" role="listbox"></ul>
+                                        </span>
+                                    {% else %}
+                                        <span class="mood-emoji">{{ day.mood.noon_mood_emoji }}</span>
+                                    {% endif %}
+                            </div>
+                        {% endif %}
+                        {% if day.mood.evening_mood or edit_mode %}
+                            <div id="evening-mood" class="mood-block" title="{{ day.mood.get_evening_mood_display }}">
+                                <span>Вечір:</span>
+                                {% if edit_mode %}
+                                    <span class="evening-mood-select mood-select custom-select">
+                                        <button class="select-button evening-mood-select-button" type="button">
+                                        <span class="selected-value evening-mood-selected-value">
+                                        {% if day.mood.evening_mood %}
+                                            {{ day.mood.evening_mood_emoji }}{{ day.mood.get_evening_mood_display }}
+                                            {% endif %}
+                                        </span>
+                                        <span class="select-arrow"></span>
+                                        </button>
+                                        <ul class="select-dropdown evening-mood-select-dropdown" role="listbox"></ul>
+                                    </span>
+                                {% else %}
+                                    <span class="mood-emoji">{{ day.mood.evening_mood_emoji }}</span>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                        {% if day.mood.night_mood or edit_mode %}
+                            <div id="night-mood" class="mood-block" title="{{ day.mood.get_night_mood_display }}">
+                                <span>Ніч:</span>
+                                {% if edit_mode %}
+                                    <span class="night-mood-select mood-select custom-select">
+                                        <button class="select-button night-mood-select-button" type="button">
+                                        <span class="selected-value night-mood-selected-value">
+                                            {% if day.mood.night_mood %}
+                                            {{ day.mood.night_mood_emoji }}{{ day.mood.get_night_mood_display }}
+                                            {% endif %}
+                                        </span>
+                                        <span class="select-arrow"></span>
+                                        </button>
+                                        <ul class="select-dropdown night-mood-select-dropdown" role="listbox"></ul>
+                                    </span>
+                                {% else %}
+                                    <span class="mood-emoji">{{ day.mood.night_mood_emoji }}</span>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+            {% if day.feeling or edit_mode %}
+                <div id="day-health" class="content-block-style day-content-block">
+                    <div class="day-block-title">Самопочуття</div>
+                    <div class="day-health-container">
+                        {% if edit_mode %}
+                            <span class="feeling-select custom-select">
+                                <button class="select-button feeling-select-button" type="button">
+                                    <span class="selected-value feeling-selected-value ">
+                                        {% if day.feeling %}{{ day.get_feeling_display|capfirst }}
+                                        {% else %}Виберіть ваше самопочуття{% endif %}
+                                    </span>
+                                    <span class="select-arrow"></span>
+                                </button>
+                            <ul class="select-dropdown feeling-select-dropdown" role="listbox"></ul>
+                            </span>
+                        {% else %}
+                            <div id="day-health-value"
+                                 data-feeling="{{ day.feeling }}">{{ day.get_feeling_display|capfirst }}</div>
+                        {% endif %}
+                        <div id="day-health-description">{{ day.feeling_description }}</div>
+                    </div>
+                </div>
+            {% endif %}
+            {% if day.tasks.exists or edit_mode %}
+                <div id="day-todo-list" class="content-block-style day-content-block">
+                    <div class="day-block-title">Список справ</div>
+                    <div class="day-todo-container">
+                        <ol class="todo-list">
+                            {% for task in day.tasks.all %}
+                                <li class="todo" data-task-id="{{ task.id }}">
+                                    <div class="execution-time">{{ task.execution_time }}</div>
+                                    <div class="task">
+                                        <div class="task-status" data-status="{{ task.status }}"></div>
+                                        <div class="task-description">{{ task.description }}</div>
+                                        {% if edit_mode %}
+                                            <div class="delete-task-button item-text-button delete-btn">
+                                            <i class="material-icons-outlined">delete</i>
+                                        </div>
+                                        {% endif %}
+                                    </div>
+                                </li>
+                            {% endfor %}
+                            {% if edit_mode %}
+                                <li class="todo todo-template">
+                                    <input type="time" class="execution-time execution-time-chooser" required />
+                                    <div class="task">
+                                        <div class="task-status" data-status="{{ task.status }}"></div>
+                                        <input  type="text" class="task-description task-description-input" placeholder="Введіть текст завдання" required />
+                                        <div class="add-task-button item-text-button add-btn">
+                                            <i class="material-icons-outlined">add</i>
+                                        </div>
+                                    </div>
+                                </li>
+                            {% endif %}
+                        </ol>
+                    </div>
+                </div>
+            {% endif %}
+            {% if day.images.exists or edit_mode %}
+                <div id="day-photos" class="content-block-style day-content-block">
+                    <div class="day-block-title">Фотографії</div>
+                    <div class="gallery scroll photo-gallery">
+                        {% for image in day.images.all %}
+                            <div class="gallery-item-container day-photo-container"
+                                 data-img-index="{{ image.id }}"
+                                 data-caption="{% if image.description %}{{ image.description }} {% endif %}">
+                                <img class="gallery-item" src="{{ image.file.url }}" alt="photo">
+                            </div>
+                        {% endfor %}
+                    </div>
+                     {% if edit_mode %}
+                            <div class="add-item-block">
+                                <textarea class="photo-description-textarea item-description-textarea" maxlength="400" placeholder="Опис до фото (необов'язково)"></textarea>
+                                <input class="choose-photo file-chooser-hidden" type="file" accept="image/*">
+                                <button id="add-photo-button" class="add-item-button">
+                                    <i class="material-icons-outlined">add</i><span>Додати фото</span>
+                                </button>
+                            </div>
+                     {% endif %}
+                </div>
+            {% endif %}
+            {% if day.videos.exists or edit_mode %}
+                <div id="day-videos" class="content-block-style day-content-block">
+                    <div class="day-block-title">Відеозаписи</div>
+                    <div class="gallery scroll video-gallery">
+                        {% for video in day.videos.all %}
+                            <div class="gallery-item-container day-video-container"
+                                 data-video-index="{{ video.id }}"
+                                 data-caption="{% if video.description %}{{ video.description }} {% endif %}">
+                                <video class="gallery-video" src="{{ video.file.url }}"></video>
+                            </div>
+                        {% endfor %}
+                    </div>
+                    {% if edit_mode %}
+                         <div class="add-item-block">
+                            <textarea class="video-description-textarea item-description-textarea" maxlength="400" placeholder="Опис до відео (необов'язково)"></textarea>
+                            <input class="choose-video file-chooser-hidden" type="file" accept="video/*">
+                            <button id="add-video-button" class="add-item-button">
+                                <i class="material-icons-outlined">add</i><span>Додати відео</span>
+                            </button>
+                         </div>
+                     {% endif %}
+                </div>
+            {% endif %}
+            {% if day.audio.exists or edit_mode %}
+                <div id="day-voice-records" class="content-block-style day-content-block">
+                    <div class="day-block-title">Голосові записи</div>
+                    <div class="gallery scroll audio-gallery">
+                        {% for audio in day.audio.all %}
+                            <div class="gallery-item-container day-audio-container"
+                                 data-caption="Ранок почався з весняного сонця"
+                                 data-audio-index="{{ audio.id }}">
+                                <audio class="gallery-item gallery-audio" controls
+                                       src="{{ audio.file.url }}"></audio>
+                                {% if audio.description %}
+                                    <div class="scroll audio-caption">
+                                        {{ audio.description }}</div>{% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                     {% if edit_mode %}
+                         <div class="add-item-block">
+                            <textarea class="audio-description-textarea item-description-textarea" maxlength="400" placeholder="Опис до голосового запису (необов'язково)"></textarea>
+                            <input class="choose-audio file-chooser-hidden" type="file" accept="audio/*">
+                            <button id="add-audio-button" class="add-item-button">
+                                <i class="material-icons-outlined">add</i><span>Додати запис</span>
+                            </button>
+                         </div>
+                     {% endif %}
+                </div>
+            {% endif %}
+            {% if day.visited_places.exists or edit_mode %}
+                <div id="day-visited-places" class="content-block-style day-content-block">
+                    <div class="day-block-title">Відвідані місця</div>
+                    <div id="map"></div>
+                    <div class="visited-places-list">
+                        {% for visited_place in day.visited_places.all %}
+                            <div class="visited-place"
+                                 data-id="{{ visited_place.id }}"
+                                 data-longitude="{{ visited_place.longitude }}"
+                                 data-latitude="{{ visited_place.latitude }}"
+                                 data-title="{{ visited_place.title }}">
+                                <i class="material-icons-outlined">location_on</i>
+                                <span class="visited-place-name">{{ visited_place.title }}</span>
+                                {% if edit_mode %}
+                                <span class="delete-place-button item-text-button delete-btn">
+                                    <i class="material-icons-outlined">delete</i>
+                                </span>
+                                {% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+            {% if day.musical_compositions.exists or edit_mode %}
+                <div id="day-songs" class="content-block-style day-content-block">
+                    <div class="day-block-title">Музичні композиції</div>
+                    <ol class="day-songs-list day-content-list">
+                        {% for musical_composition in day.musical_compositions.all %}
+                            <li class="day-songs-list-elem day-content-list-elem" data-composition-id="{{ musical_composition.id }}">
+                                <span class="elem-content">
+                                    <span class="elem-number">{{ forloop.counter }}</span>
+                                    <span class="elem-text">{{ musical_composition.author }} - {{ musical_composition.name }}</span>
+                                </span>
+                                {% if edit_mode %}
+                                    <span class="delete-composition-button item-text-button delete-btn">
+                                        <i class="material-icons-outlined">delete</i>
+                                    </span>
+                                {% endif %}
+                                <i class="material-icons-outlined">music_note</i>
+                            </li>
+                        {% endfor %}
+                    </ol>
+                    {% if edit_mode %}
+                            <div class="add-item-block">
+                                <input type="text" class="composition-author-input" placeholder="Введіть автора" required/>
+                                <input type="text" class="composition-title-input" placeholder="Введіть назву музичної композиції" required/>
+                                <button id="add-composition-button" class="add-item-button">
+                                    <i class="material-icons-outlined">add</i><span>Додати композицію</span>
+                                </button>
+                            </div>
+                     {% endif %}
+                </div>
+            {% endif %}
+            {% if day.weather or edit_mode %}
+                <div id="day-weather" class="content-block-style day-content-block">
+                    <div class="day-block-title">Погода</div>
+                    <div class="weather">
+                        <div class="temperature">
+                            <div class="min-temperature">Мінімальна температура:<span
+                                    class="temperature-value">
+                                {% if day.weather.min_temperature %}
+                                    {{ day.weather.min_temperature }}°C
+                                {% else %}
+                                    ---
+                                {% endif %}
+                            </span>
+                            </div>
+                            <div class="max-temperature">Максимальна температура:<span
+                                    class="temperature-value">
+                                {% if day.weather.max_temperature %}
+                                    {{ day.weather.max_temperature }}°C
+                                {% else %}
+                                    ---
+                                {% endif %}
+                            </span>
+                            </div>
+                        </div>
+                        <div class="weather-condition">
+                            <img class="condition-img" src=
+                                    "{% if day.weather.icon_url %}{{ day.weather.icon_url }}{% else %}{% static 'images/no-weather-icon.png' %}{% endif %}" alt="weather icon">
+                            <span class="condition-description">
+                                {{ day.weather.description }}
+                            </span>
+                        </div>
+                    </div>
+                    {% if edit_mode %}
+                        <div class="add-item-block">
+                            <input type="text" class="weather-city-input" placeholder="Введіть місто (латиницею)" required/>
+                            <button id="get-weather-button" class="add-item-button">
+                                <i class="material-icons-outlined">thermostat</i><span>Отримати погоду</span>
+                            </button>
+                        </div>
+                     {% endif %}
+                </div>
+            {% endif %}
+            {% if day.related_people.exists or edit_mode %}
+                <div id="day-related-people" class="content-block-style day-content-block">
+                    <div class="day-block-title">Пов'язані люди</div>
+                    <div class="related-people-container">
+                        {% for related_person in day.related_people.all %}
+                            <span class="related-person" data-person-id="{{ related_person.id }}">
+                                <i class="material-icons-outlined">person_pin_circle</i>
+                                <span>{{ related_person.name }}</span>
+                                {% if edit_mode %}
+                                <span class="delete-person-button item-text-button delete-btn">
+                                    <i class="material-icons-outlined">delete</i>
+                                </span>
+                                {% endif %}
+                            </span>
+                        {% endfor %}
+                    </div>
+                    {% if edit_mode %}
+                            <div class="add-item-block">
+                                <input  type="text" class="related-person-input" placeholder="Введіть ім'я людини" required/>
+                                <button id="add-related-person-button" class="add-item-button">
+                                    <i class="material-icons-outlined">add</i><span>Додати людину</span>
+                                </button>
+                            </div>
+                     {% endif %}
+                </div>
+            {% endif %}
+            {% if day.achievements.exists or edit_mode %}
+                <div id="day-achievements" class="content-block-style day-content-block">
+                    <div class="day-block-title">Досягнення</div>
+                    <ol class="day-achievements-list day-content-list">
+                        {% for achievement in day.achievements.all %}
+                            <li class="day-achievements-list-elem day-content-list-elem" data-achv-id="{{ achievement.id }}">
+                            <span class="elem-content">
+                                <span class="elem-number">{{ forloop.counter }}</span>
+                                {% if edit_mode %}
+                                    <textarea class="achievement-textarea">{{ achievement.text }}</textarea>
+                                    <div class="delete-achievement-button item-text-button delete-btn">
+                                        <i class="material-icons-outlined">delete</i>
+                                    </div>
+                                {% else %}
+                                    <span class="elem-text">{{ achievement.text }}</span>
+                                {% endif %}
+                            </span>
+                                <i class="material-icons-outlined">emoji_events</i>
+                            </li>
+                        {% endfor %}
+                    </ol>
+                    {% if edit_mode %}
+                            <div class="add-item-block">
+                                <textarea class="add-achievement-textarea" placeholder="Напишіть ваше досягнення"></textarea>
+                                <button id="add-achievement-button" class="add-item-button">
+                                    <i class="material-icons-outlined">add</i><span>Додати досягнення</span>
+                                </button>
+                            </div>
+                     {% endif %}
+                </div>
+            {% endif %}
+            {% if day.life_lessons.exists or edit_mode %}
+                <div id="day-life-lessons" class="content-block-style day-content-block">
+                    <div class="day-block-title">Життєві уроки</div>
+                    <ol class="day-life-lessons-list day-content-list">
+                        {% for life_lesson in day.life_lessons.all %}
+                            <li class="day-life-lessons-list-elem day-content-list-elem" data-lesson-id="{{ life_lesson.id }}">
+                                <span class="elem-content">
+                                    <span class="elem-number">{{ forloop.counter }}</span>
+                                    {% if edit_mode %}
+                                        <textarea class="life-lesson-textarea">{{ life_lesson.text }}</textarea>
+                                        <div class="delete-life-lesson-button item-text-button delete-btn">
+                                            <i class="material-icons-outlined">delete</i>
+                                        </div>
+                                    {% else %}
+                                        <span class="elem-text">{{ life_lesson.text }}</span>
+                                    {% endif %}
+                                </span>
+                                <i class="material-icons-outlined">bookmark</i>
+                            </li>
+                        {% endfor %}
+                    </ol>
+                    {% if edit_mode %}
+                        <div class="add-item-block">
+                            <textarea class="add-life-lesson-textarea" placeholder="Напишіть ваш життєвий урок"></textarea>
+                            <button id="add-life-lesson-button" class="add-item-button">
+                                <i class="material-icons-outlined">add</i><span>Додати життєвий урок</span>
+                            </button>
+                        </div>
+                    {% endif %}
+                </div>
+            {% endif %}
+            {% if day.conclusion or edit_mode %}
+                <div id="day-conclusions" class="content-block-style day-content-block">
+                    <div class="day-block-title">Висновки</div>
+                    <div class="day-conclusions-container">
+                        <i class="material-icons-outlined">short_text</i>
+                        {% if edit_mode %}
+                            <textarea
+                                    id="day-conclusions-textarea"
+                                    placeholder="Напишіть висновки по дню"
+                            >{% if day.conclusion %}{{ day.conclusion }}{% else %}{% endif %}</textarea>
+                        {% else %}
+                            <div class="day-conclusions-text">{{ day.conclusion }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+        <div id="day-sidebar">
+            <div id="day-navigation" class="content-block-style">
+                {% if not edit_mode %}
+                    <div id="day-owner">
+                        <a class="user-badge prevent-a " href="{% url 'profile' day.user.username %}">
+                            <img class="user-badge-photo" alt="👤" src="{% if day.user.profile.main_photo %}
+                            {{ day.user.profile.main_photo.url }}
+                            {% else %}
+                            {% static 'images/no-profile-photo.png' %}
+                            {% endif %}">
+                            <div class="user-badge-names">
+                                <span class="user-badge-name">{{ day.user.first_name }} {{ day.user.last_name }}</span>
+                            </div>
+                        </a>
+                    </div>
+                {% endif %}
+                <div id="day-date">{{ day.date| formate_date }}</div>
+                <ul id="day-menu">
+                    {% if day.title or day.image_title or edit_mode %}
+                        <li class="day-menu-item">
+                            <a href="#day-title" class="prevent-a">
+                                <span class="day-menu-item-name"><span
+                                        class="day-menu-item-text">Заголовок дня</span></span>
+                            </a>
+                        </li>
+                    {% endif %}
+                    {% if day.text_description or edit_mode %}
+                        <li class="day-menu-item">
+                            <a href="#day-text-description" class="prevent-a">
+                                <span class="day-menu-item-name"><span class="day-menu-item-text">Опис дня</span></span>
+                            </a>
+                        </li>
+                    {% endif %}
+                    {% if day.mood or edit_mode %}
+                        <li class="day-menu-item">
+                            <a href="#day-mood" class="prevent-a">
+                                <span class="day-menu-item-name"><span class="day-menu-item-text">Настрій</span></span>
+                            </a>
+                        </li>
+                    {% endif %}
+                    {% if day.feeling or edit_mode %}
+                        <li class="day-menu-item">
+                            <a href="#day-health" class="prevent-a">
+                                <span class="day-menu-item-name"><span
+                                        class="day-menu-item-text">Самопочуття</span></span>
+                            </a>
+                        </li>
+                    {% endif %}
+                    {% if day.tasks.exists or edit_mode %}
+                        <li class="day-menu-item">
+                            <a href="#day-todo-list" class="prevent-a">
+                                <span class="day-menu-item-name"><span
+                                        class="day-menu-item-text">Список справ</span></span>
+                            </a>
+                        </li>
+                    {% endif %}
+                    {% if day.images or edit_mode %}
+                        <li class="day-menu-item">
+                            <a href="#day-photos" class="prevent-a">
+                                <span class="day-menu-item-name"><span
+                                        class="day-menu-item-text">Фотографії</span></span>
+                            </a>
+                        </li>
+                    {% endif %}
+                    {% if day.videos or edit_mode %}
+                        <li class="day-menu-item">
+                            <a href="#day-videos" class="prevent-a">
+                                <span class="day-menu-item-name"><span
+                                        class="day-menu-item-text">Відеозаписи</span></span>
+                            </a>
+                        </li>
+                    {% endif %}
+                    {% if day.audio or edit_mode %}
+                        <li class="day-menu-item">
+                            <a href="#day-voice-records" class="prevent-a">
+                                <span class="day-menu-item-name"><span
+                                        class="day-menu-item-text">Голосові записи</span></span>
+                            </a>
+                        </li>
+                    {% endif %}
+                    {% if day.visited_places.exists or edit_mode %}
+                        <li class="day-menu-item">
+                            <a href="#day-visited-places" class="prevent-a">
+                                <span class="day-menu-item-name"><span
+                                        class="day-menu-item-text">Відвідані місця</span></span>
+                            </a>
+                        </li>
+                    {% endif %}
+                    {% if day.musical_compositions.exists or edit_mode %}
+                        <li class="day-menu-item">
+                            <a href="#day-songs" class="prevent-a">
+                                <span class="day-menu-item-name"><span
+                                        class="day-menu-item-text">Музичні композиції</span></span>
+                            </a>
+                        </li>
+                    {% endif %}
+                    {% if day.weather or edit_mode %}
+                        <li class="day-menu-item">
+                            <a href="#day-weather" class="prevent-a">
+                                <span class="day-menu-item-name"><span class="day-menu-item-text">Погода</span></span>
+                            </a>
+                        </li>
+                    {% endif %}
+                    {% if day.related_people.exists or edit_mode %}
+                        <li class="day-menu-item">
+                            <a href="#day-related-people" class="prevent-a">
+                            <span class="day-menu-item-name"><span
+                                    class="day-menu-item-text">Пов'язані люди</span></span>
+                            </a>
+                        </li>
+                    {% endif %}
+                    {% if day.achievements.exists or edit_mode %}
+                        <li class="day-menu-item">
+                            <a href="#day-achievements" class="prevent-a">
+                                <span class="day-menu-item-name"><span
+                                        class="day-menu-item-text">Досягнення</span></span>
+                            </a>
+                        </li>
+                    {% endif %}
+                    {% if day.life_lessons.exists or edit_mode %}
+                        <li class="day-menu-item">
+                            <a href="#day-life-lessons" class="prevent-a">
+                            <span class="day-menu-item-name"><span
+                                    class="day-menu-item-text">Життєві уроки</span></span>
+                            </a>
+                        </li>
+                    {% endif %}
+                    {% if day.conclusion or edit_mode %}
+                        <li class="day-menu-item">
+                            <a href="#day-conclusions" class="prevent-a">
+                                <span class="day-menu-item-name"><span class="day-menu-item-text">Висновки</span></span>
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+                <div class="day-types-info">
+                    <div class="day-type">
+                        <span>Тип дня:</span>
+                        {% if edit_mode %}
+                         <span class="day-type-select custom-select">
+                                <button class="select-button day-type-select-button" type="button">
+                                <span class="selected-value day-type-selected-value">{{ day.day_type_emoji }} {{ day.get_day_type_display }}</span>
+                                <span class="select-arrow"></span>
+                                </button>
+                                <ul class="select-dropdown day-type-select-dropdown" role="listbox"></ul>
+                            </span>
+                        {% else %}
+                        <span class="day-type-value" data-day-type="{{ day.day_type }}">
+                            <span>{{ day.day_type_emoji }}</span>
+                            <span>{{ day.get_day_type_display }}</span>
+                        </span>
+                        {% endif %}
+                    </div>
+                    <div class="day-access-mode">
+                        <span>Доступ:</span>
+                        {% if edit_mode %}
+                            <span class="access-mode-select custom-select">
+                                <button class="select-button access-mode-select-button" type="button">
+                                <span class="selected-value access-mode-selected-value">{{ day.get_access_mode_display }}</span>
+                                <span class="select-arrow"></span>
+                                </button>
+                                <ul class="select-dropdown access-mode-select-dropdown" role="listbox"></ul>
+                            </span>
+                        {% else %}
+                            <span class="access-mode-value" data-access-mode="{{ day.access_mode }}">
+                                <span>{{ day.get_access_mode_display }}</span>
+                            </span>
+                        {% endif %}
+                    </div>
+                </div>
+                {% if user == day.user %}
+                    <div class="day-edit-button-container">
+                        <a class="edit-day-button prevent-a" href="
+                                {% if edit_mode %}{% url 'view_day' day.user.username day.date|date:"Y-m-d" %}
+                                {% else %}{% url 'edit_day' day.user.username day.date|date:"Y-m-d" %}{% endif %}">
+                                <i class="material-icons-outlined">edit</i>
+                                <span class="edit-day-button-text">Редагувати день</span>
+                        </a>
+                    </div>
+                {% endif %}
+                 {% if edit_mode %}
+                     <div class="day-updated">
+                     <span>Оновлено: </span>
+                         <span class="day-updated-time">{{ day.updated|date:"d.m.Y, H:i" }}</span>
+                    </div>
+                 {% endif %}
+            </div>
+        </div>
+    </div>
+{% endblock %}
+{% block scripts %}
+    <script>
+        const userFullName = "{{ day.user.first_name }} {{ day.user.last_name }}";
+        const editMode = {% if edit_mode %}true{% else %}false{% endif %};
+        const date = "{{day.date|date:'Y-m-d'}}";
+        const dateDisplay = "{{day.date|formate_date}}";
+    </script>
+    <script src="{% static 'js/days/gallery.js' %}"></script>
+    {% if day.visited_places.exists or edit_mode %}
+        <script src="{% static 'js/days/map.js' %}"></script>
+    {% endif %}
+    <script src="{% static 'js/days/day.js' %}"></script>
+    {% if edit_mode %}
+        <script>
+            const accessModes = [{% for mode in day.access_modes_list %}"{{ mode }}",{% endfor %}];
+            const dayTypes = [{% for day_type in day.day_types_list %}"{{ day_type }}",{% endfor %}];
+            const moods = [{% for mood in moods_list %}"{{ mood }}",{% endfor %}];
+            const feelings = [{% for feeling in day.feelings_list %}"{{ feeling }}",{% endfor %}];
+            const csrftoken = getCookie('csrftoken');
+        </script>
+        <script src="{% static 'js/days/edit_day.js' %}"></script>
+        <script src="{% static 'js/days/edit_type_access_mode.js' %}"></script>
+        <script src="{% static 'js/days/edit_title.js' %}"></script>
+        <script src="{% static 'js/days/edit_text_description.js' %}"></script>
+        <script src="{% static 'js/days/edit_moods.js' %}"></script>
+        <script src="{% static 'js/days/edit_feeling.js' %}"></script>
+        <script src="{% static 'js/days/edit_media_content.js' %}"></script>
+        <script src="{% static 'js/days/edit_tasks.js' %}"></script>
+        <script src="{% static 'js/days/edit_weather.js' %}"></script>
+        <script src="{% static 'js/days/edit_musical_compositions.js' %}"></script>
+        <script src="{% static 'js/days/edit_related_people.js' %}"></script>
+        <script src="{% static 'js/days/edit_achievements_life_lessons.js' %}"></script>
+        <script src="{% static 'js/days/edit_conclusion.js' %}"></script>
+    {% endif %}
+{% endblock %}
+
+
+
+
+
+

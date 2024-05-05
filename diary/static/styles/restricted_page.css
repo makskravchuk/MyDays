@@ -1,0 +1,17 @@
+body{
+    background:#4268b3;
+}
+
+#restricted_page_wallpaper{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+#restricted_page_wallpaper img{
+    width: 70%;
+    height: 70%;
+    margin: 80px;
+    object-fit: cover;
+    border-radius: 9px;
+}

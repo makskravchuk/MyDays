@@ -1,0 +1,259 @@
+#edit-profile {
+    font-family: 'Arial', sans-serif;
+    user-select: none;
+    position: fixed;
+    display: none;
+    background-color: rgba(240, 240, 240, 0.9);
+    backdrop-filter: blur(10px);
+    min-width: 100%;
+    min-height: 100%;
+    overflow: auto;
+    top: 0;
+    z-index: 1000;
+    left: 0;
+}
+
+.edit-profile-content {
+    width: 100%;
+    height: 100vh;
+    display: flex;
+}
+
+.edit-profile-photo-block {
+    display: flex;
+    box-sizing: border-box;
+    margin-left: 40px;
+    padding-top: 20px;
+    flex: 2;
+    min-height: 100%;
+}
+
+.edit-profile-info-block {
+    box-sizing: border-box;
+    flex: 3;
+    min-height: 100%;
+}
+
+.edit-profile-about-me-block {
+    box-sizing: border-box;
+    flex: 3;
+    min-height: 100%;
+}
+
+.edit-main-photo {
+    -webkit-user-drag: none;
+    user-select: none;
+    width: 300px;
+    height: 400px;
+    object-fit: cover;
+    border-radius: 9px;
+    margin-bottom: 7px;
+}
+
+.profile-photo-item {
+    width: 300px;
+    padding-top: 20px;
+}
+
+.close-modal-button {
+    position: absolute;
+    color: #333333;
+    top: 5px;
+    right: 10px;
+    cursor: pointer;
+}
+
+.close-modal-button i {
+    font-size: 30px;
+}
+
+.close-modal-button:hover {
+    transform: scale(1.2);
+}
+
+.btn {
+    font-family: 'Poppins', 'Arial', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    color: white;
+    background: saddlebrown;
+    border: none;
+    text-align: center;
+    padding: 5px 20px;
+    border-radius: 9px;
+    cursor: pointer;
+}
+
+.change-photo-button {
+    display: flex;
+    column-gap: 5px;
+    align-items: center;
+    justify-content: center;
+    width: 300px;
+    box-sizing: border-box;
+}
+
+.edit-profile-block-title {
+    width: 100%;
+    font-family: 'Arial', sans-serif;
+    box-sizing: border-box;
+    font-weight: bold;
+    font-size: 20px;
+    margin-top: 20px;
+    padding: 0 0 5px 0;
+    text-align: center;
+    color: cornflowerblue;
+}
+
+textarea {
+    font-family: 'Arial', sans-serif;
+    box-sizing: border-box;
+    padding: 10px;
+    border-radius: 9px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    resize: none;
+    overflow-y: auto;
+    font-size: 17px;
+    font-weight: 500;
+    line-height: 1.2;
+    text-align: justify;
+}
+
+.about-me-textarea {
+    width: 92%;
+    min-height: 80%;
+    margin: 0 20px;
+}
+
+textarea:focus {
+    outline: none;
+}
+
+.input-box {
+    width: 100%;
+    margin-top: 20px;
+}
+
+.input-box label {
+    color: black;
+    font-size: 16px;
+}
+
+.input-box input, .select-box {
+    background: white;
+    position: relative;
+    height: 50px;
+    width: 80%;
+    outline: none;
+    font-size: 16px;
+    color: black;
+    margin-top: 8px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 9px;
+    padding: 0 15px;
+}
+
+.input-box input:focus {
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+}
+
+.form .column {
+    display: flex;
+    column-gap: 15px;
+}
+
+
+.form .gender-box {
+    margin-top: 20px;
+}
+
+.gender-box h3 {
+    color: black;
+    font-size: 16px;
+    font-weight: 400;
+}
+
+.form :where(.gender-option, .gender) {
+    display: flex;
+    align-items: center;
+    column-gap: 30px;
+    font-size: 16px;
+    flex-wrap: wrap;
+}
+
+.form .gender {
+    column-gap: 5px;
+}
+
+.gender input {
+    width: 15px;
+    height: 15px;
+}
+
+.form :where(.gender input, .gender label) {
+    cursor: pointer;
+}
+
+.gender label {
+    color: black;
+}
+
+.select-box select {
+    height: 100%;
+    width: 100%;
+    outline: none;
+    border: none;
+    color: black;
+    font-size: 16px;
+}
+
+.life-status-textarea {
+    margin-top: 8px;
+    width: 96%;
+    height: 85px;
+    overflow: hidden;
+}
+
+.save-button-container {
+    width: 100%;
+    margin-top: 25px;
+    display: flex;
+    justify-content: center;
+}
+
+.save-profile-button {
+    background: linear-gradient(225deg, #FF3CAC 0%, #784BA0 50%, #2B86C5 100%);
+    width: fit-content;
+}
+
+.choose-profile-main-photo {
+    visibility: hidden;
+    width: 0;
+    height: 0;
+    border: none;
+    outline: none;
+    margin: 0;
+    padding: 0;
+    background: #2B86C5;
+}
+
+.error {
+    color: red;
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+.edit-errors {
+    width: 300px;
+    margin-top: 30px;
+}
+
+@media screen and (max-width: 500px) {
+    .form .column {
+        flex-wrap: wrap;
+    }
+
+    .form :where(.gender-option, .gender) {
+        row-gap: 10px;
+    }
+}

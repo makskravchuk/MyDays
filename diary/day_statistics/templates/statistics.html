@@ -1,0 +1,111 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block title %}Статистика{% endblock %}
+{% block links %}
+    <link rel="stylesheet" href="{% static 'styles/statistics.css' %}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+{% endblock %}
+{% block content %}
+    <div id="statistic">
+        <div class="statistic-blocks">
+            <div class="statistic-control-block content-block-style">
+                <form action="{% url 'view_statistics' %}">
+                <div class="statistic-block-title">Період</div>
+                <div class="period-chooser">
+                    <div>
+                        <label>
+                            <input type="radio" value="all" name="period" {% if period == "all" %}checked{% endif %}/>
+                            <span>За увесь час</span>
+                        </label>
+                        <label>
+                            <input type="radio" value="year" name="period" {% if period == "year" %}checked{% endif %}/>
+                            <span>Рік</span>
+                        </label>
+                        <label>
+                            <input type="radio" value="month" name="period" {% if period == "month" %}checked{% endif %}/>
+                            <span>Місяць</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="statistic-block-title">Дата</div>
+                <div class="carousel year-chooser"><span class="year">
+                    <span class="prev prev-year"></span>
+                    <span id="year-value"></span>
+                    <span class="next next-year"></span>
+                    <input type="hidden" name="year">
+                </span></div>
+                <div class="carousel month-chooser"><span class="year">
+                    <span class="prev prev-month"></span>
+                    <span id="month-value"></span>
+                    <span class="next next-month"></span>
+                    <input type="hidden" name="month">
+                </span></div>
+                <div class="report-button-container">
+                    <button class="report-button" type="submit">
+                        <i class="material-icons-outlined">bar_chart</i><span>Отримати звіт</span></button>
+                </div>
+                </form>
+            </div>
+            <div class="statistic-mood-block content-block-style">
+                <div class="statistic-block-title">Настрій</div>
+                <div class="mood-charts">
+                    <canvas id="morning-mood-chart"></canvas>
+                    <canvas id="afternoon-mood-chart"></canvas>
+                    <canvas id="evening-mood-chart"></canvas>
+                    <canvas id="night-mood-chart"></canvas>
+                </div>
+                <div class="mood-chart-explanation">
+                    <div>
+                    <span class="mood"><span class="mood-color"></span><span class="mood-emoji">😊</span><span
+                            class="mood-text">щасливий</span></span>
+                        <span class="mood"><span class="mood-color"></span><span class="mood-emoji">😍</span><span
+                                class="mood-text">закоханий</span></span>
+                        <span class="mood"><span class="mood-color"></span><span class="mood-emoji">💪</span><span
+                                class="mood-text">впевнений</span></span>
+                        <span class="mood"><span class="mood-color"></span><span class="mood-emoji">😄</span><span
+                                class="mood-text">грайливий</span></span>
+                        <span class="mood"><span class="mood-color"></span><span class="mood-emoji">😓</span><span
+                                class="mood-text">збентежений</span></span>
+                    </div>
+                    <div>
+                    <span class="mood"><span class="mood-color"></span><span class="mood-emoji">😐</span><span
+                            class="mood-text">байдужий</span></span>
+                        <span class="mood"><span class="mood-color"></span><span class="mood-emoji">😡</span><span
+                                class="mood-text">злий</span></span>
+                        <span class="mood"><span class="mood-color"></span><span class="mood-emoji">😱</span><span
+                                class="mood-text">наляканий</span></span>
+                        <span class="mood"><span class="mood-color"></span><span class="mood-emoji">😔</span><span
+                                class="mood-text">сумний</span></span>
+                        <span class="mood"><span class="mood-color"></span><span class="mood-emoji">😭</span><span
+                                class="mood-text">відчай</span></span>
+                    </div>
+                </div>
+            </div>
+            <div class="statistic-health-block content-block-style">
+                <canvas id="health-chart"></canvas>
+            </div>
+            <div class="statistic-day-type-block content-block-style">
+                <canvas id="day-type-chart"></canvas>
+            </div>
+        </div>
+{% endblock %}
+
+{% block scripts %}
+    <script>
+        const period = "{{ period }}";
+        const year = {{ year }};
+        const month = {{ month }};
+        const birthday = new Date("{{ user.profile.date_of_birth|date:'Y m d'}}");
+        const moodLabels = [{% for mood_label in mood_labels %}'{{ mood_label }}',{% endfor %}];
+        const dayTypeLabels  = [{% for type_label in day_type_labels %}'{{ type_label|capfirst }}',{% endfor %}];
+        const feelingLabels = [{% for feeling_label in feeling_labels %}'{{ feeling_label|capfirst }}',{% endfor %}];
+        const morningMoodsData = [{% for count in morning_moods %}{{ count }},{% endfor %}];
+        const noonMoodsData = [{% for count in noon_moods %}{{ count }},{% endfor %}];
+        const eveningMoodsData = [{% for count in evening_moods %}{{ count }},{% endfor %}];
+        const nightMoodsData = [{% for count in night_moods %}{{ count }},{% endfor %}];
+        const dayTypesData = [{% for count in day_types_count %}{{ count }},{% endfor %}];
+        const feelingsDaysRange = {{ feelings_days_range }};
+        const feelingsData = [{% for day, value in feelings %}{x: {{ day }}, y:"{{value|capfirst}}"},{% endfor %}];
+    </script>
+    <script src="{% static 'js/statistics.js' %}"></script>
+{% endblock %}

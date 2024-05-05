@@ -1,0 +1,193 @@
+#statistic {
+    padding: 20px 40px;
+    user-select: none;
+}
+
+.statistic-blocks {
+    display: flex;
+    flex-wrap: wrap;
+    row-gap: 20px;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.statistic-control-block {
+    width: 250px;
+    height: 310px;
+    border-radius: 13px;
+}
+
+.statistic-mood-block {
+    width: 940px;
+    height: 310px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.mood-charts {
+    height: 195px;
+    width: 940px;
+    display: flex;
+    flex-wrap: nowrap;
+    overflow: hidden;
+    align-items: center;
+    justify-content: space-around;;
+}
+
+.mood-chart-explanation {
+    font-size: 15px;
+    font-family: Arial, sans-serif;
+    color: #333333;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    row-gap: 7px;
+    margin-top: 5px;
+}
+
+.mood {
+    user-select: none;
+    margin-right: 20px;
+    display: inline-flex;
+    align-items: center;
+}
+
+.mood-color {
+    margin-right: 8px;
+    background: black;
+    border-radius: 2px;
+    width: 14px;
+    display: inline-block;
+    height: 14px;
+}
+
+.statistic-block-title {
+    width: 100%;
+    font-family: Arial, sans-serif;
+    font-size: 18px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.statistic-health-block {
+    height: 310px;
+    width: 700px;
+    display: flex;
+    align-items: start;
+    justify-content: center;
+}
+
+.statistic-day-type-block {
+    height: 310px;
+    width: 490px;
+    display: flex;
+    align-items: start;
+}
+
+.statistic-month {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.statistic-month .select-button {
+    font-size: 18px;
+    font-family: "Arial", sans-serif;
+}
+
+.period-chooser {
+    margin: 10px 0;
+}
+
+.period-chooser div {
+    display: flex;
+    flex-direction: column;
+    row-gap: 7px;
+    font-size: 17px;
+    font-family: 'Poppins', 'Arial', sans-serif;
+}
+
+.period-chooser div label {
+    display: flex;
+    align-items: center;
+}
+
+.period-chooser input[type="radio"] {
+    margin-right: 10px;
+    margin-bottom: 3px;
+    width: 15px;
+    height: 15px;
+}
+
+.carousel {
+    display: flex;
+    justify-content: center;
+    margin: 10px 0;
+}
+
+.year {
+    font-size: 17px;
+    user-select: none;
+    display: flex;
+    align-items: center;
+}
+
+.next {
+    cursor: pointer;
+    margin-left: 8px;
+    width: 7px;
+    height: 7px;
+    border-color: #000;
+    border-bottom: 3px solid;
+    border-left: 3px solid;
+    transform: rotate(-135deg);
+}
+
+.prev {
+    cursor: pointer;
+    margin-right: 8px;
+    width: 7px;
+    height: 7px;
+    border-color: #000;
+    border-bottom: 3px solid;
+    border-left: 3px solid;
+    transform: rotate(45deg);
+}
+
+#year-value, #month-value {
+    width: 70px;
+    text-align: center;
+}
+
+.report-button-container {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.report-button {
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: auto;
+    font-family: 'Poppins', 'Arial', sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    background: linear-gradient(225deg, #FF3CAC 0%, #784BA0 50%, #2B86C5 100%);
+    border: 1px solid white;
+    color: white;
+    padding: 3px 7px;
+    border-radius: 9px;
+    cursor: pointer;
+}
+
+.report-button i {
+    margin-right: 5px;
+}
+

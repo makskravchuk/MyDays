@@ -1,0 +1,79 @@
+body{
+    background: white;
+}
+
+#friends-list{
+    margin: 20px auto auto auto;
+    width: 100%;
+}
+#friends-list-container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+#friends-search .search{
+    height: 20px;
+    background: white;
+}
+#friends-search .search-input{
+    width: 400px;
+}
+#friends-search.search:hover input{
+    width: 400px;
+
+}
+#friends-search .search-input:focus{
+    font-weight: bolder;
+    width: 400px;
+}
+
+#people{
+    margin: 10px 0 0 0;
+    padding: 0;
+    list-style-type: none;
+    width: 100%;
+}
+.person{
+    font-family: 'Poppins', 'Arial', sans-serif;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 15px;
+    margin: 5px 15px;
+}
+.person:hover{
+    border-radius: 25px;
+    background: rgba(240,240,240,0.5);
+}
+.user-badge{
+    font-size: 17px;
+    margin: 0;
+}
+.user-badge-username{
+    font-size: 16px;
+    margin-top: 2px;
+}
+
+.user-badge-names{
+    margin-left: 20px;
+}
+
+.user-badge img{
+    width: 70px;
+    height: 70px;
+}
+
+.friendship-button{
+    cursor: pointer;
+    outline: none;
+    border: none;
+    color: white;
+    background: limegreen;
+    border-radius: 9px;
+    padding: 6px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 15px;
+    margin-right: 5px;
+}

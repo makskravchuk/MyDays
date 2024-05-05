@@ -1,0 +1,39 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MyDays | Вхід</title>
+    <link rel="icon" type="image/x-icon" href="{% static '/images/favicon.ico' %}">
+    <link rel="stylesheet" href="{% static 'styles/login.css' %}">
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<body>
+<div class="login">
+    <form action="" method="post">
+        {% csrf_token %}
+        <div id="logo">
+            <a href="{% url 'login' %}"><img alt="MyDays" src="{% static '/images/mydays-logo-1.webp' %}"></a>
+        </div>
+        {% if error %} <div class="incorrect-login">* {{error}}</div>{% endif %}
+        <div class="input-box">
+            <input type="text" placeholder="Ім'я користувача" name="username" required>
+            <i class='bx bxs-user'></i>
+        </div>
+        <div class="input-box">
+            <input type="password" placeholder="Пароль" name="password" required>
+            <i class='bx bxs-lock-alt' ></i>
+        </div>
+        <div class="forgot">
+            <a href="#">Забули пароль?</a>
+        </div>
+        <button type="submit" value="Login" class="btn">Увійти</button>
+        <div class="register-link">
+            <p>Не маєте облікового запису? <a href="{% url 'register' %}">Зареєструйтеся</a></p>
+        </div>
+    </form>
+</div>
+</body>
+</html>

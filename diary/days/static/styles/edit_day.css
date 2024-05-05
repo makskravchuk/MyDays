@@ -1,0 +1,261 @@
+#day-text-title {
+    width: 100%;
+}
+
+
+#day-text-title-input {
+    width: 97%;
+    font-family: 'Poppins', 'Arial', sans-serif;
+    font-weight: bold;
+    font-size: 19px;
+    text-align: center;
+}
+
+#day-text-title-input:focus {
+    border: 1px solid rgba(0, 0, 0, 0.2);
+}
+
+.btn {
+    font-family: 'Poppins', 'Arial', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    color: white;
+    background: saddlebrown;
+    border: none;
+    padding: 3px 7px;
+    border-radius: 9px;
+    cursor: pointer;
+}
+
+.item-text-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.add-btn .material-icons-outlined {
+    color: lime;
+    font-size: 25px;
+}
+
+.delete-btn .material-icons-outlined {
+    color: red;
+    font-size: 26px;
+}
+
+.delete-btn:hover .material-icons-outlined {
+    color: red;
+}
+
+
+.change-photo-title-button {
+    display: flex;
+    column-gap: 5px;
+    align-items: center;
+    width: 250px;
+    margin: auto;
+    justify-content: center;
+    box-sizing: border-box;
+}
+
+.file-chooser-hidden {
+    display: none;
+}
+
+#day-text-description-textarea {
+    width: 100%;
+    height: max-content;
+    overflow: hidden;
+    min-height: 400px;
+    font-family: cursive;
+    font-size: 17px;
+    line-height: 1.7;
+}
+
+textarea {
+    font-family: 'Arial', sans-serif;
+    box-sizing: border-box;
+    padding: 10px;
+    border-radius: 9px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    resize: none;
+    overflow-y: auto;
+    font-size: 17px;
+    font-weight: 500;
+    line-height: 1.2;
+    text-align: justify;
+}
+
+input {
+    background: white;
+    outline: none;
+    color: black;
+    font-size: 17px;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+    border-radius: 9px;
+    padding: 5px 10px;
+}
+
+.custom-select {
+    color: saddlebrown;
+}
+
+.select-button {
+    font-size: 17px;
+    font-family: 'Poppins', 'Arial', sans-serif;
+    font-weight: bold;
+    border-radius: 9px;
+    padding: 1px 7px;
+    color: saddlebrown;
+    border: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.select-button:hover {
+    background-color: rgba(0, 0, 0, 0.1);
+}
+
+.select-button .select-arrow {
+    width: 6px;
+    height: 6px;
+    margin-left: 6px;
+    border-bottom: 2px solid;
+    border-left: 2px solid;
+}
+
+.select-dropdown {
+    font-size: 17px;
+    font-family: 'Poppins', 'Arial', sans-serif;
+    overflow-x: hidden;
+}
+
+.select-dropdown li label {
+    padding: 1px 7px;
+}
+
+
+.access-mode-select-button {
+    margin-left: 5px;
+}
+
+.day-type-select {
+    display: inline-flex;
+}
+
+.mood-select {
+    margin-left: 5px;
+    margin-right: 40px;
+}
+
+#day-health-description {
+    border-left-color: saddlebrown;
+}
+
+.feeling-select {
+    margin: 0 20px;
+}
+
+.execution-time-chooser {
+    font-family: "Arial", sans-serif;
+    border-radius: 25px;
+    border-color: rgba(0, 0, 0, 0.5);
+}
+
+.task-description-input {
+    margin: 0;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    font-size: 17px;
+}
+
+.todo:hover .execution-time-chooser {
+    border: none;
+}
+
+.add-task-button i {
+    font-size: 27px;
+}
+
+.add-item-block {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    gap: 10px;
+    align-items: center;
+}
+
+.item-description-textarea {
+    width: 80%;
+}
+
+.add-item-button {
+    font-family: 'Poppins', 'Arial', sans-serif;
+    font-size: 14px;
+    font-weight: 600;
+    flex-wrap: nowrap;
+    color: white;
+    border: none;
+    padding: 3px 7px;
+    border-radius: 9px;
+    cursor: pointer;
+    outline: none;
+    display: flex;
+    height: fit-content;
+    align-items: center;
+    background: saddlebrown;
+    column-gap: 5px;
+}
+
+.delete-place-button, .delete-person-button {
+    margin-left: 10px;
+}
+
+.composition-author-input {
+    width: 25%;
+}
+
+.composition-title-input {
+    width: 40%;
+}
+
+.achievement-textarea, .life-lesson-textarea {
+    width: 100%;
+    overflow: hidden;
+}
+
+.add-achievement-textarea, .add-life-lesson-textarea {
+    min-height: 90px;
+    width: 100%;
+    overflow: hidden;
+}
+
+.delete-achievement-button, .delete-life-lesson-button {
+    margin-left: 10px;
+}
+
+
+.day-conclusions-container:hover {
+    background: none;
+}
+
+.day-conclusions-container:hover .material-icons-outlined {
+    color: crimson;
+}
+
+#day-conclusions-textarea {
+    width: 100%;
+    overflow: hidden;
+    min-height: 150px;
+}
+
+.day-updated {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    color: #333333;
+}
+
+.day-updated-time {
+    margin-left: 5px;
+}

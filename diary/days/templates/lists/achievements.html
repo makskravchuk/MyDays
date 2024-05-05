@@ -1,0 +1,34 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block title %}Досягнення{% endblock %}
+
+{% block links %}
+    <link rel="stylesheet" href="{% static '/styles/list-page.css' %}">
+    <link rel="stylesheet" href="{% static '/styles/achievements.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div id="achievements" class="list-page">
+        <div class="list-page-header">
+            <div class="list-page-title">Досягнення</div>
+            <div class="list-page-search">
+                <form>
+                    <div class="search" title="Пошук досягнень">
+                        <i class="search-icon fas fa-search"></i>
+                        <input class="search-input" type="search" name="search_query" placeholder="Пошук досягнень"
+                               autocomplete="off">
+                    </div>
+                </form>
+            </div>
+        </div>
+        <ol class="achievements-list content-list">
+            {% for achievement in achievements %}
+                <li class="achievements-list-elem content-list-elem"><span class="elem-content">
+                    <span class="elem-number">{{ achievement.day.date }}</span><span
+                        class="elem-text">{{ achievement.text }}</span></span><i
+                        class="material-icons-outlined">emoji_events</i>
+                </li>
+            {% endfor %}
+        </ol>
+    </div>
+{% endblock %}

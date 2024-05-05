@@ -1,0 +1,77 @@
+{% extends 'index.html' %}
+{% load static %}
+
+{% block title %}Календар{% endblock %}
+
+{% block links %}
+    <link rel="stylesheet" href="{% static 'styles/calendar.css' %}">
+    <link rel="stylesheet" href="{% static 'styles/days_search.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div id="calendar">
+        <div id="calendar-header">
+            <div class="calendar-search">
+                <form>
+                    <div class="search day-search" title="Пошук дня">
+                            <span class="day-search-property custom-select">
+                            <button class="select-button property-select-button" type="button">
+                            <span class="selected-value property-selected-value"></span>
+                            <span class="select-arrow"></span>
+                            </button>
+                            <ul class="select-dropdown property-select-dropdown" role="listbox"></ul>
+                            </span>
+                        <button class="search-button form-button"><i
+                                class="search-icon material-icons-outlined ">search</i>
+                        </button>
+                        <input class="search-input" type="text" name="search_query" placeholder="Пошук дня">
+                        <button class="clear-search-input form-button" type="reset">
+                            <i class="clear-icon material-icons-outlined">close</i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+            <div id="calendar-date">
+                    <span class="calendar-month custom-select month-select">
+                        <button class="select-button month-select-button" aria-labelledby="select button"
+                                aria-haspopup="listbox"
+                                aria-expanded="false"
+                                aria-controls="select-dropdown">
+                            <span class="selected-value month-selected-value"></span>
+                            <span class="select-arrow"></span>
+                        </button>
+                        <ul class="select-dropdown month-select-dropdown" role="listbox">
+                        </ul>
+                    </span>
+                <span class="calendar-year">
+                    <span class="prev-year"></span>
+                    <span id="year"></span>
+                    <span class="next-year"></span>
+                </span>
+            </div>
+        </div>
+        <div class="calendar-sheet">
+            <div class="arrow-box">
+                <div class="arrows arrows-prev prev-month"></div>
+            </div>
+            <ul class="calendar-matrix"></ul>
+            <div class="arrow-box">
+                <div class="arrows arrows-next next-month"></div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+
+{% block scripts %}
+    <script>
+        const searchResults =  {% if search_results %}{{ search_results|safe }}{% else %}null{% endif %};
+        const csrftoken = getCookie('csrftoken');
+        const username = "{{ user.username }}";
+        const birthday = new Date("{{ user.profile.date_of_birth|date:'Y m d'}}");
+        const dayParameter = "{{ request.GET.day_parameter|default_if_none:"null" }}";
+        const searchQuery  = "{{ request.GET.search_query|default_if_none:"null"  }}";
+    </script>
+    <script src="{% static 'js/days_search.js' %}"></script>
+    <script src="{% static 'js/calendar/calendar.js' %}"></script>
+{% endblock %}

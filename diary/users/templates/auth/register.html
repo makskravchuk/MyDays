@@ -1,0 +1,66 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <link rel="stylesheet" href="{% static '/styles/register.css' %}" />
+    <title>MyDays | Реєстрація</title>
+    <link rel="icon" type="image/x-icon" href="{% static '/images/favicon.ico' %}">
+</head>
+<body>
+<section class="register">
+    <div id="logo">
+        <a href="{% url 'login' %}"><img alt="MyDays" src="{% static '/images/mydays-logo-1.webp' %}"></a>
+    </div>
+    {% if errors %} 
+    {% for error in errors %}
+        <div class="register-error">{{error}}</div>
+    {% endfor %}
+    {% endif %}
+    <form action="" class="form" method="post">
+        {% csrf_token %}
+        <div class="input-box">
+            <label>Унікальне ім'я користувача</label>
+            {{ user_form.username }}
+        </div>
+        <div class="input-box">
+            <label>Повне ім'я</label>
+            <div class="column">
+            {{ user_form.first_name }}
+            {{ user_form.last_name }}
+            </div>
+        </div>
+
+        <div class="input-box">
+            <label>Електронна пошта</label>
+            {{ user_form.email }}
+        </div>
+
+        <div class="column">
+            <div class="input-box">
+                <label>Номер телефону</label>
+                {{ profile_form.phone_number }}
+            </div>
+            <div class="input-box">
+                <label>Дата народження</label>
+                {{ profile_form.date_of_birth }}
+            </div>
+        </div>
+        <div class="column">
+            <div class="input-box">
+                <label>Пароль</label>
+                {{ user_form.password }}
+            </div>
+            <div class="input-box">
+                <label>Підтвердження паролю</label>
+                {{ user_form.password_confirm }}
+            </div>
+        </div>
+        <button type="submit" value="Register">Зареєструватися</button>
+    </form>
+</section>
+</body>
+</html>

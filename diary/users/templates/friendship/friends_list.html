@@ -1,0 +1,51 @@
+{% extends 'index.html' %}
+{% load static %}
+
+{% block title %}{{title}}{% endblock %}
+{% block links %}<link rel="stylesheet" href="{% static 'styles/friends_list.css' %}">{% endblock %}
+
+
+{% block content %}
+    <div id="friends-list">
+        <div id="friends-list-container">
+            <div id="friends-search">
+                <form>
+                    <div class="search" title="Пошук людей">
+                        <i class="search-icon fas fa-search"></i>
+                        <input class="search-input" type="search" name="search_query"
+                        placeholder="Пошук людей" autocomplete="off">
+                    </div>
+                </form>
+            </div>
+            <ul id="people">
+                {% for friend, status in friends %}
+                <li class="person">
+                    <a class="user-badge prevent-a" href="{% url 'profile' friend.username %}">
+                        <img class="user-badge-photo" alt="👤" src="{% if friend.profile.main_photo %}
+                        {{friend.profile.main_photo.url}}
+                        {% else %}
+                        {% static 'images/no-profile-photo.png' %}
+                        {% endif %}">
+                        <div class="user-badge-names">
+                            <span class="user-badge-name">{{friend.first_name}} {{friend.last_name}}</span>
+                            <span class="user-badge-username">@{{friend.username}}</span>
+                        </div>
+                    </a>
+                    {% if user.id != friend.id %}
+                        <div class="friendship-buttons-group" data-user-id="{{ friend.id }}" data-friendship-status="{{status}}">
+                            <button class="friendship-button prevent-a"></button>
+                        </div>
+                    {% endif %}
+                </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const currentUser = "{{ user.username }}";
+</script>
+<script src="{% static 'js/friends_list.js'%}"></script>
+{% endblock %}

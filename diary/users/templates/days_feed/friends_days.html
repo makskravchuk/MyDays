@@ -1,0 +1,74 @@
+{% extends 'index.html' %}
+{% load static %}
+{% load day_filters %}
+{% block title %}Дні друзів{% endblock %}
+
+{% block links %}
+    <link rel="stylesheet" href="{% static '/styles/days_search.css' %}">
+    <link rel="stylesheet" href="{% static '/styles/friends_days.css' %}">
+{% endblock %}
+
+{% block content %}
+    <div id="friends-shared-days">
+        <div id="friends-shared-days-search">
+            <form>
+                <div class="search day-search" title="Пошук днів близьких">
+                            <span class="day-search-property custom-select">
+                            <button class="select-button property-select-button" type="button">
+                            <span class="selected-value property-selected-value"></span>
+                            <span class="select-arrow"></span>
+                            </button>
+                            <ul class="select-dropdown property-select-dropdown" role="listbox"></ul>
+                            </span>
+                    <button class="search-button form-button"><i class="search-icon material-icons-outlined ">search</i>
+                    </button>
+                    <input class="search-input" type="text" name="friends_days_search_query"
+                           placeholder="Пошук днів близьких">
+                    <button class="clear-search-input form-button" type="reset">
+                        <i class="clear-icon material-icons-outlined">close</i>
+                    </button>
+                </div>
+            </form>
+        </div>
+        {% for friend_day in friends_days %}
+            <div class="post">
+                <a class="user-badge prevent-a" href="{% url 'profile' friend_day.user.username %}">
+                    <img class="user-badge-photo" alt="👤" src="{% if friend_day.user.profile.main_photo %}
+                            {{ friend_day.user.profile.main_photo.url }}
+                            {% else %}
+                            {% static 'images/no-profile-photo.png' %}
+                            {% endif %}">
+                    <div class="user-badge-names">
+                        <span class="user-badge-name">{{ friend_day.user.first_name }} {{ friend_day.user.last_name }}</span>
+                        <span class="user-badge-username">@{{ friend_day.user.username }}</span>
+                    </div>
+                </a>
+                <div class="shared-day content-block-style">
+                    <div class="shared-day-header">
+                        <div class="shared-day-date">{{ friend_day.date|formate_date }}</div>
+                        <div class="shared-day-title">
+                            {% if friend_day.title %}{{ friend_day.title }}{% endif %}
+                        </div>
+                    </div>
+                    <div class="shared-day-body">
+                        {% if friend_day.image_title %}
+                            <img alt="Описове зображення" class="post-image-title"
+                                 src="{{ friend_day.image_title.url }}">
+                        {% endif %}
+                        {% if friend_day.text_description %}
+                            <div class="shared-day-text-fragment">
+                                {{ friend_day.text_description|truncatechars_html:350|safe }}
+                            </div>
+                         {% endif %}
+                    </div>
+                    <div class="shared-day-footer">
+                        <a class="shared-day-link prevent-a" href="{% url 'view_day' friend_day.user.username friend_day.date %}">Переглянути цей день</a>
+                    </div>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+{% block scripts %}
+    <script src="{% static '/js/days_search.js' %}"></script>
+{% endblock %}
