@@ -33,10 +33,10 @@
             {#            <span class="badge">1</span>#}
         </div>
         <div id="requests-button"
-             class="header-button {% if request.resolver_match.url_name == 'friend_requests' %}current-page{% endif %}"
+             class="header-button"
              title="Запити на дружбу">
-            <a href="{% url 'friend_requests' %}">
-                <button class="button"><i class="fa-solid fa-user-group icon-style">
+            <a href="{% url 'friend_requests' %}" class="prevent-a">
+                <button class="button {% if request.resolver_match.url_name == 'friend_requests' %}current-page{% endif %}"><i class="fa-solid fa-user-group icon-style">
                 </i></button>
             </a>
             {% if pending_friend_requests_count > 0 %}
